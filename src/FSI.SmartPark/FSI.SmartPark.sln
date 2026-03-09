@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36408.4 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSI.SmartPark.Domain", "FSI.SmartPark.Domain\FSI.SmartPark.Domain.csproj", "{EEECFA88-EBB0-47BB-A155-935904F961E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEECFA88-EBB0-47BB-A155-935904F961E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEECFA88-EBB0-47BB-A155-935904F961E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEECFA88-EBB0-47BB-A155-935904F961E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEECFA88-EBB0-47BB-A155-935904F961E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53810DF5-35EF-476D-99E6-1F0F9DE5705D}
+	EndGlobalSection
+EndGlobal
