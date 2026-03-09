@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FSI.SmartPark.Domain.Enums;
 
 namespace FSI.SmartPark.Domain.Entities.Equipe
 {
@@ -10,22 +6,35 @@ namespace FSI.SmartPark.Domain.Entities.Equipe
     {
         public string Codigo { get; private set; }
         public decimal Salario { get; private set; }
-        public int Status { get; private set; } // Enum StatusFuncionario
-        public int TipoEscala { get; private set; } // Enum TipoEscala
+        public StatusFuncionario Status { get; private set; }
+        public TipoEscalaFuncionario TipoEscala { get; private set; }
         public DateTime? DataAdmissao { get; private set; }
         public int Pessoa_Id { get; private set; }
         public int? Cargo_Id { get; private set; }
         public int? Unidade_Id { get; private set; }
         public int? Supervisor_Id { get; private set; }
 
-        public Funcionario(int pessoaId, decimal salario)
+        public Funcionario(int pessoaId, decimal salario, TipoEscalaFuncionario escala)
         {
-            if (salario < 0) throw new Exception("Salário negativo inválido");
+            if (salario < 0)
+                throw new ArgumentException("Salário não pode ser negativo.");
+
             Pessoa_Id = pessoaId;
             Salario = salario;
-            Status = 1; // Ativo
+            TipoEscala = escala;
+            Status = StatusFuncionario.Ativo;
+            DataAdmissao = DateTime.Now;
         }
 
-        public void AlterarSalario(decimal novoValor) => Salario = novoValor;
+        public void AlterarSalario(decimal novoValor)
+        {
+            if (novoValor < 0) throw new ArgumentException("Salário não pode ser negativo.");
+            Salario = novoValor;
+        }
+
+        public void Desligar()  => Status = StatusFuncionario.Desligado;
+        public void Afastar()   => Status = StatusFuncionario.Afastado;
+        public void IniciarFerias() => Status = StatusFuncionario.Ferias;
+        public void Reativar()  => Status = StatusFuncionario.Ativo;
     }
 }
