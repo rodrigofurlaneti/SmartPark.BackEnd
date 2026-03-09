@@ -1,4 +1,3 @@
-using FSI.SmartPark.API.Extensions;
 using FSI.SmartPark.API.Middleware;
 using FSI.SmartPark.Application.Services.Comercial;
 using FSI.SmartPark.Application.Services.Equipe;
@@ -50,13 +49,8 @@ builder.Services.AddCors(o => o.AddPolicy("SmartParkPolicy", p =>
     p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("SmartParkPolicy");
 app.UseHttpsRedirection();

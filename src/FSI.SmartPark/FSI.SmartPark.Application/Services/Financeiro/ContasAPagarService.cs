@@ -1,6 +1,7 @@
 using FSI.SmartPark.Application.DTOs.Financeiro;
 using FSI.SmartPark.Application.Interfaces.Financeiro;
 using FSI.SmartPark.Domain.Entities.Financeiro;
+using FSI.SmartPark.Domain.Enums;
 using FSI.SmartPark.Domain.Interfaces.Financeiro;
 
 namespace FSI.SmartPark.Application.Services.Financeiro;
@@ -34,7 +35,8 @@ public class ContasAPagarService : IContasAPagarService
     public async Task<IEnumerable<ContasAPagarResponseDto>> ListarEmAberto()
     {
         var lista = await _repo.ListarTodos();
-        return lista.Where(c => c.StatusConta == Domain.Enums.StatusContasAPagar.Aberto).Select(ToDto);
+        // StatusConta é int no domínio: 1 = Aberto
+        return lista.Where(c => c.StatusConta == (int)StatusContasAPagar.Aberto).Select(ToDto);
     }
 
     public async Task Pagar(int id)
@@ -46,6 +48,11 @@ public class ContasAPagarService : IContasAPagarService
     }
 
     private static ContasAPagarResponseDto ToDto(ContasAPagar c) => new(
-        c.Id, c.NumeroDocumento, c.DataVencimento, c.ValorTotal,
-        c.StatusConta, c.Fornecedor_Id, c.Unidade_Id);
+        c.Id,
+        c.NumeroDocumento,
+        c.DataVencimento,
+        c.ValorTotal,
+        (StatusContasAPagar)c.StatusConta,   // cast int → enum para o DTO
+        c.Fornecedor_Id,
+        c.Unidade_Id);
 }

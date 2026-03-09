@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FSI.SmartPark.Domain.Entities.Operacional;
 
 namespace FSI.SmartPark.Domain.Interfaces.Operacional
 {
-    internal interface IVeiculoRepository
+    public interface IVeiculoRepository : IRepositoryBase<Veiculo>
     {
     }
 }
