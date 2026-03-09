@@ -8,14 +8,7 @@ namespace FSI.SmartPark.Domain.Entities.Financeiro
 {
     public class ContasAPagar : EntityBase
     {
-        public string NumeroDocumento { get; private set; }
-        public DateTime DataVencimento { get; private set; }
-        public decimal ValorTotal { get; private set; }
-        public int StatusConta { get; private set; } // Enum StatusContasAPagar
-        public string CodigoDeBarras { get; private set; }
-        public int? Fornecedor_Id { get; private set; }
-        public int? Unidade_Id { get; private set; }
-
+        public ContasAPagar() { }
         public ContasAPagar(string doc, DateTime vencimento, decimal valor)
         {
             if (valor <= 0) throw new Exception("Valor deve ser positivo");
@@ -25,6 +18,14 @@ namespace FSI.SmartPark.Domain.Entities.Financeiro
             StatusConta = 1; // Aberto
         }
 
-        public void Pagar() => StatusConta = 2; // Pago
+        public string NumeroDocumento { get; private set; }
+        public DateTime DataVencimento { get; private set; }
+        public decimal ValorTotal { get; private set; }
+        public int StatusConta { get; private set; }
+        public string? CodigoDeBarras { get; private set; }
+        public int? Fornecedor_Id { get; private set; }
+        public int? Unidade_Id { get; private set; }
+
+        public void Pagar() => StatusConta = 2;
     }
 }

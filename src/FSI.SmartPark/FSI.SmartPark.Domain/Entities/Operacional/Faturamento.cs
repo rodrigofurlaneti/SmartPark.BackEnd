@@ -2,30 +2,10 @@
 {
     public class Faturamento : EntityBase
     {
-        public int NumFechamento { get; private set; }
-        public DateTime DataAbertura { get; private set; }
-        public DateTime DataFechamento { get; private set; }
-        public decimal ValorTotal { get; private set; }
-        public decimal ValorDinheiro { get; private set; }
-        public decimal ValorCartaoDebito { get; private set; }
-        public decimal ValorCartaoCredito { get; private set; }
-        public int Unidade_Id { get; private set; }
+        // ✅ Construtor vazio para o Dapper — não remove a proteção do domínio
+        public Faturamento() { }
 
-        // [A08] Campos de fechamento de caixa adicionados conforme modelagem MySQL
-        public int? IdSoftpark { get; private set; }                      // ID de integração legado
-        public string? NomeUnidade { get; private set; }                  // Snapshot do nome (histórico)
-        public int NumTerminal { get; private set; }                      // Terminal/caixa
-        public string? TicketInicial { get; private set; }                // Primeiro ticket do turno
-        public string? TicketFinal { get; private set; }                  // Último ticket do turno
-        public string? PatioAtual { get; private set; }                   // Ocupação atual do pátio
-        public decimal? ValorRotativo { get; private set; }               // Receita de clientes avulsos
-        public decimal? ValorRecebimentoMensalidade { get; private set; } // Recebimentos de mensalistas
-        public decimal? ValorSemParar { get; private set; }               // Receita via Sem Parar/Veloe
-        public decimal? ValorSeloDesconto { get; private set; }           // Descontos via selos
-        public decimal? SaldoInicial { get; private set; }                // Fundo de troco inicial
-        public decimal? ValorSangria { get; private set; }                // Retirada de caixa no turno
-        public int? Usuario_Id { get; private set; }                      // Operador responsável
-
+        // Construtor de negócio — mantém intacto
         public Faturamento(int numFechamento, int numTerminal, int unidadeId, int usuarioId)
         {
             NumFechamento = numFechamento;
@@ -35,15 +15,32 @@
             DataAbertura = DateTime.Now;
         }
 
-        public void FecharTurno(
-            decimal valorTotal,
-            decimal dinheiro,
-            decimal cartaoDebito,
-            decimal cartaoCredito,
-            decimal? valorRotativo = null,
-            decimal? valorMensalidade = null,
-            decimal? valorSemParar = null,
-            decimal? valorSeloDesconto = null,
+        public int NumFechamento { get; private set; }
+        public DateTime DataAbertura { get; private set; }
+        public DateTime DataFechamento { get; private set; }
+        public decimal ValorTotal { get; private set; }
+        public decimal ValorDinheiro { get; private set; }
+        public decimal ValorCartaoDebito { get; private set; }
+        public decimal ValorCartaoCredito { get; private set; }
+        public int Unidade_Id { get; private set; }
+        public int? IdSoftpark { get; private set; }
+        public string? NomeUnidade { get; private set; }
+        public int NumTerminal { get; private set; }
+        public string? TicketInicial { get; private set; }
+        public string? TicketFinal { get; private set; }
+        public string? PatioAtual { get; private set; }
+        public decimal? ValorRotativo { get; private set; }
+        public decimal? ValorRecebimentoMensalidade { get; private set; }
+        public decimal? ValorSemParar { get; private set; }
+        public decimal? ValorSeloDesconto { get; private set; }
+        public decimal? SaldoInicial { get; private set; }
+        public decimal? ValorSangria { get; private set; }
+        public int? Usuario_Id { get; private set; }
+
+        public void FecharTurno(decimal valorTotal, decimal dinheiro,
+            decimal cartaoDebito, decimal cartaoCredito,
+            decimal? valorRotativo = null, decimal? valorMensalidade = null,
+            decimal? valorSemParar = null, decimal? valorSeloDesconto = null,
             string? ticketFinal = null)
         {
             DataFechamento = DateTime.Now;
@@ -59,7 +56,7 @@
         }
 
         public void DefinirSaldoInicial(decimal saldo) => SaldoInicial = saldo;
-        public void RegistrarSangria(decimal valor)    => ValorSangria = (ValorSangria ?? 0) + valor;
+        public void RegistrarSangria(decimal valor) => ValorSangria = (ValorSangria ?? 0) + valor;
         public void DefinirTicketInicial(string ticket) => TicketInicial = ticket;
     }
 }
