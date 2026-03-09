@@ -13,7 +13,7 @@ namespace FSI.SmartPark.Domain.Entities.Suporte
         public bool Ativo { get; private set; }
         public int? Funcionario_Id { get; private set; }
         public int? Unidade_Id { get; private set; }
-
+        public Usuario() { }
         public Usuario(string login, string senha, int? unidadeId = null)
         {
             if (string.IsNullOrWhiteSpace(login)) throw new Exception("Login obrigatório");

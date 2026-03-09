@@ -22,7 +22,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
 
         var colunas = string.Join(", ", props.Select(p => p.Name));
         var params_ = string.Join(", ", props.Select(p => $"@{p.Name}"));
-        var sql = $"INSERT INTO {Tabela} ({colunas}) VALUES ({params_}); SELECT LAST_INSERT_ID();";
+        var sql = $"INSERT INTO SmartPark.{Tabela} ({colunas}) VALUES ({params_}); SELECT LAST_INSERT_ID();";
 
         return await conn.ExecuteScalarAsync<int>(sql, entity);
     }
@@ -36,7 +36,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
             .ToList();
 
         var sets = string.Join(", ", props.Select(p => $"{p.Name} = @{p.Name}"));
-        var sql = $"UPDATE {Tabela} SET {sets} WHERE Id = @Id";
+        var sql = $"UPDATE SmartPark.{Tabela} SET {sets} WHERE Id = @Id";
 
         var rows = await conn.ExecuteAsync(sql, entity);
         return rows > 0;
@@ -45,7 +45,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
     public virtual async Task<bool> Excluir(int id)
     {
         using var conn = _ctx.CreateConnection();
-        var rows = await conn.ExecuteAsync($"DELETE FROM {Tabela} WHERE Id = @id", new { id });
+        var rows = await conn.ExecuteAsync($"DELETE FROM SmartPark.{Tabela} WHERE Id = @id", new { id });
         return rows > 0;
     }
 
@@ -59,7 +59,17 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
 
     public virtual async Task<IEnumerable<TEntity>> ListarTodos()
     {
-        using var conn = _ctx.CreateConnection();
-        return await conn.QueryAsync<TEntity>($"SELECT * FROM {Tabela}");
+        try
+        {
+            using var conn = _ctx.CreateConnection();
+            var resultado = await conn.QueryAsync<TEntity>($"SELECT * FROM SmartPark.{Tabela}");
+            return resultado;
+        }
+        catch (Exception ex)
+        {
+            // Troque pelo seu logger
+            Console.WriteLine($"[ERRO] ListarTodos - Tabela: {Tabela} | {ex.Message}");
+            throw;
+        }
     }
 }

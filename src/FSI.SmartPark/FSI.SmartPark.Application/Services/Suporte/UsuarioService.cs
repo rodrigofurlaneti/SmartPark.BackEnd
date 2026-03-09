@@ -24,16 +24,50 @@ public class UsuarioService : IUsuarioService
 
     public async Task<TokenResponseDto> Autenticar(UsuarioLoginDto dto)
     {
-        var lista = await _repo.ListarTodos();
-        var usuario = lista.FirstOrDefault(u =>
-            u.Login == dto.Login && u.Senha == HashSenha(dto.Senha) && u.Ativo)
-            ?? throw new UnauthorizedAccessException("Login ou senha inválidos.");
+        // 1. Validar entrada
+        if (string.IsNullOrWhiteSpace(dto.Login))
+            throw new ArgumentException("Login é obrigatório.");
 
-        // Token simples — substituir por JWT em produção
-        var token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{usuario.Id}:{usuario.Login}:{DateTime.UtcNow:O}"));
+        if (string.IsNullOrWhiteSpace(dto.Senha))
+            throw new ArgumentException("Senha é obrigatória.");
+
+        // 2. Buscar usuários
+        IEnumerable<Usuario> lista;
+        try
+        {
+            lista = await _repo.ListarTodos();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Erro ao acessar o banco de dados.", ex);
+        }
+
+        // 3. Verificar se retornou dados
+        if (lista == null || !lista.Any())
+            throw new Exception("Nenhum usuário cadastrado no sistema.");
+
+        // 4. Buscar pelo login (sem senha ainda — para dar mensagens específicas)
+        var usuarioPorLogin = lista.FirstOrDefault(u => u.Login == dto.Login);
+
+        if (usuarioPorLogin == null)
+            throw new UnauthorizedAccessException("Login não encontrado.");
+
+        // 5. Verificar se está ativo
+        if (!usuarioPorLogin.Ativo)
+            throw new UnauthorizedAccessException("Usuário bloqueado. Contate o administrador.");
+
+        // 6. Verificar senha
+        var hashSenha = HashSenha(dto.Senha);
+        if (usuarioPorLogin.Senha != hashSenha)
+            throw new UnauthorizedAccessException("Senha incorreta.");
+
+        // 7. Gerar token
+        var token = Convert.ToBase64String(
+            Encoding.UTF8.GetBytes($"{usuarioPorLogin.Id}:{usuarioPorLogin.Login}:{DateTime.UtcNow:O}")
+        );
         var expiracao = DateTime.UtcNow.AddHours(8);
 
-        return new TokenResponseDto(token, expiracao, ToDto(usuario));
+        return new TokenResponseDto(token, expiracao, ToDto(usuarioPorLogin));
     }
 
     public async Task<UsuarioResponseDto?> ObterPorId(int id)
